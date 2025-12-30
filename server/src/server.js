@@ -6,7 +6,6 @@ import animalsRouter from "./routes/animals.js";
 import sheltersRouter from "./routes/shelters.js";
 import Animal from "./models/Animal.js";
 import Shelter from "./models/Shelter.js";
-import { MongoMemoryServer } from "mongodb-memory-server";
 
 const app = express();
 
@@ -14,7 +13,7 @@ const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/petrescue"
 const PORT = process.env.PORT || 4000;
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "http://localhost:5173";
 
-app.use(cors({ origin: CLIENT_ORIGIN }));
+app.use(cors()); // Allow all origins for easier local development
 app.use(express.json());
 app.use(morgan("dev"));
 
@@ -55,18 +54,14 @@ async function ensureSeed() {
 }
 
 async function start() {
-  let connected = false;
   try {
     await mongoose.connect(MONGO_URI);
-    connected = true;
+    console.log(`Connected to MongoDB at ${MONGO_URI}`);
   } catch (err) {
-    connected = false;
+    console.error("Failed to connect to MongoDB", err);
+    process.exit(1);
   }
-  if (!connected) {
-    const mem = await MongoMemoryServer.create();
-    const uri = mem.getUri();
-    await mongoose.connect(uri);
-  }
+  
   await ensureSeed();
   app.listen(PORT, () => {
     console.log(`Server listening on http://localhost:${PORT}`);

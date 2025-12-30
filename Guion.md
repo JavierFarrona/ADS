@@ -3,23 +3,23 @@
 ## Resumen del Proyecto
 - Aplicación full‑stack para gestionar animales y refugios.
 - Frontend en React + Vite + TypeScript (`client/`), backend en Node.js + Express + Mongoose (`server/`).
-- Persistencia en MongoDB; si no hay base disponible, usa una instancia en memoria con `mongodb-memory-server`.
+- Persistencia en MongoDB.
 - API REST con recursos `animals` y `shelters`, validación con `Joi`, CORS habilitado y registro de peticiones con `morgan`.
 
 ## Arquitectura
 - Capas:
   - UI (React) → `axios` → API (Express) → Mongoose → MongoDB.
 - Conexión BD:
-  - Intenta `MONGO_URI` (por defecto `mongodb://127.0.0.1:27017/petrescue`) y, si falla, levanta Mongo en memoria.
+  - Usa `MONGO_URI` (por defecto `mongodb://127.0.0.1:27017/petrescue`).
 - Comunicación:
   - `axios` consume la API con base `VITE_API_BASE` (por defecto `http://localhost:4000`).
 
 ```
-[React UI] --HTTP--> [Express API] --ODM--> [Mongoose] --wire--> [MongoDB | In-Memory]
+[React UI] --HTTP--> [Express API] --ODM--> [Mongoose] --wire--> [MongoDB]
 ```
 
 ## Tecnologías
-- Backend: `express`, `mongoose`, `joi`, `cors`, `morgan`, `mongodb-memory-server`.
+- Backend: `express`, `mongoose`, `joi`, `cors`, `morgan`.
 - Frontend: `react`, `react-router-dom`, `axios`, `@vitejs/plugin-react`, TypeScript, ESLint.
 
 ## Estructura de Carpetas
@@ -40,8 +40,8 @@
   - Endpoint salud `GET /` devuelve servicio y conteo de animales.
   - Referencias: `server/src/server.js:17`, `server/src/server.js:18`, `server/src/server.js:19`, `server/src/server.js:21`.
 - Conexión BD
-  - Intenta `MONGO_URI`; si falla, activa `mongodb-memory-server` y conecta.
-  - Referencias: `server/src/server.js:60`, `server/src/server.js:66`, `server/src/server.js:69`.
+  - Conecta a `MONGO_URI`.
+  - Referencias: `server/src/server.js:60`.
 - Seeding
   - `ensureSeed()` añade 5 refugios y 5 animales si hay pocos registros.
   - Script manual: `node src/seed.js`.

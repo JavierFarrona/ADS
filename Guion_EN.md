@@ -3,23 +3,23 @@
 ## Project Summary
 - Full‑stack app to manage animals and shelters.
 - Frontend: React + Vite + TypeScript (`client/`), Backend: Node.js + Express + Mongoose (`server/`).
-- MongoDB persistence; when local DB is not available, the API falls back to an in‑memory Mongo instance using `mongodb-memory-server`.
+- MongoDB persistence.
 - REST API with `animals` and `shelters` resources, `Joi` input validation, CORS enabled, request logging via `morgan`.
 
 ## Architecture
 - Layers:
   - UI (React) → `axios` → API (Express) → Mongoose → MongoDB.
 - DB connection:
-  - Tries `MONGO_URI` (`mongodb://127.0.0.1:27017/petrescue` by default). If it fails, starts an in‑memory Mongo.
+  - Connects to `MONGO_URI` (`mongodb://127.0.0.1:27017/petrescue` by default).
 - Communication:
   - `axios` consumes the API with base `VITE_API_BASE` (defaults to `http://localhost:4000`).
 
 ```
-[React UI] --HTTP--> [Express API] --ODM--> [Mongoose] --wire--> [MongoDB | In-Memory]
+[React UI] --HTTP--> [Express API] --ODM--> [Mongoose] --wire--> [MongoDB]
 ```
 
 ## Technologies
-- Backend: `express`, `mongoose`, `joi`, `cors`, `morgan`, `mongodb-memory-server`.
+- Backend: `express`, `mongoose`, `joi`, `cors`, `morgan`.
 - Frontend: `react`, `react-router-dom`, `axios`, `@vitejs/plugin-react`, TypeScript, ESLint.
 
 ## Directory Structure
@@ -40,8 +40,8 @@
   - Health endpoint `GET /`: service name + animals count.
   - References: `server/src/server.js:17`, `server/src/server.js:18`, `server/src/server.js:19`, `server/src/server.js:21`.
 - DB connection
-  - Tries `MONGO_URI`; if it fails, creates an in‑memory Mongo and connects.
-  - References: `server/src/server.js:60`, `server/src/server.js:66`, `server/src/server.js:69`.
+  - Connects to `MONGO_URI`.
+  - References: `server/src/server.js:60`.
 - Seeding
   - `ensureSeed()` inserts 5 shelters and 5 animals when collections are below threshold.
   - Manual script: `node src/seed.js`.

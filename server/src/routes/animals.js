@@ -22,6 +22,20 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+router.get("/search", async (req, res, next) => {
+  try {
+    const q = String(req.query.q || "").trim();
+    if (!q) {
+      const animals = await Animal.find().lean();
+      return res.json({ ok: true, data: animals });
+    }
+    const animals = await Animal.find({ $text: { $search: q } }).lean();
+    res.json({ ok: true, data: animals });
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.get("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -33,20 +47,6 @@ router.get("/:id", async (req, res, next) => {
       return res.status(404).json({ ok: false, error: "Animal not found" });
     }
     res.json({ ok: true, data: animal });
-  } catch (err) {
-    next(err);
-  }
-});
-
-router.get("/search", async (req, res, next) => {
-  try {
-    const q = String(req.query.q || "").trim();
-    if (!q) {
-      const animals = await Animal.find().lean();
-      return res.json({ ok: true, data: animals });
-    }
-    const animals = await Animal.find({ $text: { $search: q } }).lean();
-    res.json({ ok: true, data: animals });
   } catch (err) {
     next(err);
   }

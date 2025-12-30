@@ -3,7 +3,7 @@
 ## Stack
 - Client: React + Vite + TypeScript (`client/`)
 - Server: Node.js + Express + Mongoose (`server/`)
-- DB: MongoDB (fallback `mongodb-memory-server`)
+- DB: MongoDB
 
 ## Arranque / Start
 - Backend: `cd server && npm run start` → `http://localhost:4000`
@@ -49,14 +49,13 @@ Content-Type: application/json
 - Shelters: Crear, editar inline, eliminar → recargar lista
 
 ## Diseño / Design
-- Fallback Mongo en memoria si falla `MONGO_URI` (`server/src/server.js:66-69`)
 - Validación `Joi` y `ObjectId` en rutas (`animals.js` / `shelters.js`)
 - Índice texto en `Animal` (`server/src/models/Animal.js:14`)
 - `.lean()` para respuestas ligeras
 
 ## Troubleshooting
 - CORS: ajustar `CLIENT_ORIGIN` y `VITE_API_BASE`
-- Mongo: memoria automática; para persistencia, definir `MONGO_URI`
+- Mongo: requiere instancia local o remota.
 - IDs inválidos: 400 “Invalid id”
 
 ## Referencias Clave / Key References
@@ -85,7 +84,7 @@ Content-Type: application/json
 POST /animals { name, species, age, shelterId, description }
 ```
 - Flows: Search → List • View → Edit/Delete • Create/Edit → Save & back Home • Shelters CRUD
-- Design: In‑memory fallback, `Joi` validation, text index, `.lean()`
+- Design: `Joi` validation, text index, `.lean()`
 - Troubleshoot: CORS origins, define `MONGO_URI`, handle invalid IDs
-- Code refs: Server `server/src/server.js:21,33,57,66` • Models `Animal.js:3,14`, `Shelter.js:3` • Frontend `App.tsx:21`, `main.tsx:9`, `api.ts:3`
+- Code refs: Server `server/src/server.js:21,33,57` • Models `Animal.js:3,14`, `Shelter.js:3` • Frontend `App.tsx:21`, `main.tsx:9`, `api.ts:3`
 

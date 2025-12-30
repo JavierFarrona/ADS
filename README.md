@@ -1,11 +1,11 @@
 # PetRescue — Guía de descarga e instalación
 
 ## Descripción
-Aplicación full‑stack para gestionar animales y refugios. Frontend React + Vite + TypeScript (`client/`), backend Node.js + Express + Mongoose (`server/`). Base de datos MongoDB (con fallback a memoria si no hay instancia disponible).
+Aplicación full‑stack para gestionar animales y refugios. Frontend React + Vite + TypeScript (`client/`), backend Node.js + Express + Mongoose (`server/`). Base de datos MongoDB.
 
 ## Requisitos
 - Node.js 18+ y npm
-- Opcional: MongoDB local o Atlas (si no, se usa `mongodb-memory-server` en memoria)
+- MongoDB local (o Atlas).
 
 ## Descarga del proyecto
 ```bash
@@ -32,7 +32,6 @@ cd ADS
   PORT=4000
   CLIENT_ORIGIN=http://localhost:5173
   ```
-  Si `MONGO_URI` no está disponible, el servidor arrancará una instancia de Mongo en memoria automáticamente.
 - Frontend (`client`): crear `.env` (opcional)
   ```env
   VITE_API_BASE=http://localhost:4000
@@ -88,7 +87,7 @@ Abre dos terminales:
 
 ## Troubleshooting
 - Error de CORS: ajusta `CLIENT_ORIGIN` en backend y `VITE_API_BASE` en frontend para que coincidan con tus dominios.
-- Mongo no disponible: se usará memoria automáticamente; para persistencia real, define `MONGO_URI` hacia tu instancia local/Atlas.
+- Mongo no disponible: asegura que tu instancia de MongoDB esté corriendo.
 - IDs inválidos: la API devuelve 400 “Invalid id” si el formato no es correcto.
 - Puertos: por defecto `4000` backend y `5173` frontend; puedes cambiarlos en `.env` o configuración.
 
