@@ -5,14 +5,17 @@ import Animal from "../models/Animal.js";
 
 const router = express.Router();
 
+// Esquema de validación para animales
 const animalSchema = Joi.object({
   name: Joi.string().min(1).required(),
   species: Joi.string().min(1).required(),
   age: Joi.number().integer().min(0).required(),
-  shelterId: Joi.string().hex().length(24).required(),
+  shelterId: Joi.string().hex().length(24).required(), // ID del refugio (24 caracteres hex)
   description: Joi.string().allow("").optional()
 });
 
+// GET /animals
+// Obtiene la lista de todos los animales
 router.get("/", async (req, res, next) => {
   try {
     const animals = await Animal.find().lean();
@@ -22,13 +25,17 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+// GET /animals/search?q=query
+// Busca animales por texto en nombre y descripción
 router.get("/search", async (req, res, next) => {
   try {
     const q = String(req.query.q || "").trim();
     if (!q) {
+      // Si no hay query, devuelve todos
       const animals = await Animal.find().lean();
       return res.json({ ok: true, data: animals });
     }
+    // Búsqueda de texto usando el índice creado en el modelo
     const animals = await Animal.find({ $text: { $search: q } }).lean();
     res.json({ ok: true, data: animals });
   } catch (err) {
@@ -36,6 +43,8 @@ router.get("/search", async (req, res, next) => {
   }
 });
 
+// GET /animals/:id
+// Obtiene un animal por su ID
 router.get("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -52,6 +61,8 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+// POST /animals
+// Crea un nuevo animal
 router.post("/", async (req, res, next) => {
   try {
     const { error, value } = animalSchema.validate(req.body, { abortEarly: false });
@@ -68,6 +79,8 @@ router.post("/", async (req, res, next) => {
   }
 });
 
+// PUT /animals/:id
+// Actualiza un animal existente
 router.put("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -92,6 +105,8 @@ router.put("/:id", async (req, res, next) => {
   }
 });
 
+// DELETE /animals/:id
+// Elimina un animal
 router.delete("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;

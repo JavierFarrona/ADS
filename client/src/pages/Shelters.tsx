@@ -2,16 +2,18 @@ import { useEffect, useState } from "react";
 import { api } from "../api";
 import type { Shelter } from "../api";
 
+// Componente para la gestión de refugios (Listar, Crear, Editar, Eliminar)
 function Shelters() {
   const [shelters, setShelters] = useState<Shelter[]>([]);
   const [loading, setLoading] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null); // ID del refugio que se está editando
   const [form, setForm] = useState<{ name: string; address: string; capacity: number }>({
     name: "",
     address: "",
     capacity: 0
   });
 
+  // Carga la lista de refugios
   async function load() {
     setLoading(true);
     try {
@@ -22,22 +24,26 @@ function Shelters() {
     }
   }
 
+  // Carga inicial
   useEffect(() => {
     load();
   }, []);
 
+  // Crea un nuevo refugio
   async function createShelter() {
     await api.post("/shelters", form);
-    setForm({ name: "", address: "", capacity: 0 });
-    await load();
+    setForm({ name: "", address: "", capacity: 0 }); // Limpia el formulario
+    await load(); // Recarga la lista
   }
 
+  // Actualiza un refugio existente
   async function updateShelter(id: string) {
     await api.put(`/shelters/${id}`, form);
-    setEditingId(null);
+    setEditingId(null); // Sale del modo edición
     await load();
   }
 
+  // Elimina un refugio
   async function deleteShelter(id: string) {
     await api.delete(`/shelters/${id}`);
     await load();
@@ -46,6 +52,7 @@ function Shelters() {
   return (
     <div>
       <div className="subtitle">Crear nuevo shelter</div>
+      {/* Formulario de creación */}
       <form className="form" onSubmit={(e) => { e.preventDefault(); createShelter(); }}>
         <label>
           Nombre
@@ -69,6 +76,7 @@ function Shelters() {
       <ul className="list">
         {shelters.map((s) => (
           <li key={s._id} className="card">
+            {/* Si editingId coincide con este shelter, muestra formulario de edición */}
             {editingId === s._id ? (
               <form className="form" onSubmit={(e) => { e.preventDefault(); updateShelter(s._id); }}>
                 <label>
@@ -89,6 +97,7 @@ function Shelters() {
                 </div>
               </form>
             ) : (
+              /* Vista normal de la tarjeta del refugio */
               <>
                 <div className="title">{s.name}</div>
                 <div>{s.address}</div>

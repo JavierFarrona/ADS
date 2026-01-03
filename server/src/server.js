@@ -13,22 +13,26 @@ const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/petrescue"
 const PORT = process.env.PORT || 4000;
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "http://localhost:5173";
 
-app.use(cors()); // Allow all origins for easier local development
-app.use(express.json());
-app.use(morgan("dev"));
+app.use(cors()); // Permite todos los orígenes para facilitar el desarrollo local
+app.use(express.json()); // Parsea cuerpos JSON
+app.use(morgan("dev")); // Log de peticiones HTTP en consola
 
+// Endpoint de salud / estado
 app.get("/", async (req, res) => {
   const count = await Animal.countDocuments();
   res.json({ ok: true, service: "petrescue-api", animals: count });
 });
 
+// Rutas de la API
 app.use("/animals", animalsRouter);
 app.use("/shelters", sheltersRouter);
 
+// Manejo global de errores
 app.use((err, req, res, next) => {
   res.status(500).json({ ok: false, error: "Internal server error" });
 });
 
+// Función para asegurar datos iniciales (semilla) si la DB está vacía
 async function ensureSeed() {
   const sc = await Shelter.countDocuments();
   const ac = await Animal.countDocuments();
